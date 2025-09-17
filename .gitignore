@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
@@ -19,16 +17,19 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
+Thumbs.db
 *.pem
 
-# debug
+# debug & logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
 # env files (can opt-in for committing if needed)
 .env*
@@ -39,3 +40,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma
+/prisma/dev.db
+# Ignore generated Prisma client if not in node_modules
+# /prisma/client/
+
+# VS Code
+.vscode/
+
+# JetBrains IDEs
+.idea/
+
+# Ignore generated code if you use this path
+/src/generated/prisma
+
+# Optional: ignore SQLite migration readmes (safe to keep)
+/prisma/migrations/*/README.md
