@@ -1,17 +1,24 @@
 // prisma/seed.ts
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Seeding database...');
 
-  // Create a test user
+
+  // Hash the password for the test user
+  const password = 'password';
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  // Create a test user with passwordHash
   const user = await prisma.user.create({
     data: {
       email: 'testuser@example.com',
       name: 'Test User',
       image: 'https://i.pravatar.cc/150?img=1',
+      passwordHash,
     },
   });
 

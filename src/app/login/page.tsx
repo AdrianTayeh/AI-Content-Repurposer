@@ -3,6 +3,7 @@ import { signIn, providerMap } from "auth";
 import { AuthError } from "next-auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
 
 const SIGNIN_ERROR_URL = "/error";
@@ -10,7 +11,7 @@ const SIGNIN_ERROR_URL = "/error";
 export default async function SignInPage(props: {
   searchParams: { callbackUrl?: string };
 }) {
-  const callbackUrl = (await props.searchParams?.callbackUrl) ?? "";
+  const callbackUrl = props.searchParams?.callbackUrl ?? "";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted">
@@ -20,7 +21,7 @@ export default async function SignInPage(props: {
             Sign in to ContentAI
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-6">
+  <CardContent className="flex flex-col gap-6">
           {/* Credentials Form */}
           <form
             className="flex flex-col gap-4"
@@ -36,6 +37,7 @@ export default async function SignInPage(props: {
               }
             }}
           >
+            <input type="hidden" name="callbackUrl" value="/dashboard" />
             <div className="flex flex-col gap-2">
               <label htmlFor="email" className="text-sm font-medium">
                 Email
@@ -94,6 +96,12 @@ export default async function SignInPage(props: {
                 </form>
               )
             )}
+          </div>
+          <div className="flex flex-col gap-2 pt-4">
+            <span className="text-center text-sm text-muted-foreground">Don&#39;t have an account?</span>
+            <Button asChild variant="secondary" className="w-full">
+              <Link href="/register">Sign up</Link>
+            </Button>
           </div>
         </CardContent>
       </Card>
