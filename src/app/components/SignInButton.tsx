@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function SignInButton() {
@@ -25,11 +26,14 @@ export default function SignInButton() {
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <span>Hi, {name}!</span>
+        <Button variant="default" onClick={() => signOut()}>
+          Sign out
+        </Button>
       </div>
     );
   }
   return (
-    <Button variant="outline" onClick={() => router.push("/login")}> 
+    <Button variant="default" onClick={() => router.push("/login")}>
       Sign in
     </Button>
   );
