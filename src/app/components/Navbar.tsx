@@ -1,7 +1,8 @@
 import { Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import SignInButton from "./SignInButton";
 
 export default function Navbar() {
   return (
@@ -15,8 +16,7 @@ export default function Navbar() {
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline">Sign in</Button>
-          <Button>Sign Up</Button>
+          <SignInButton />
         </div>
       </header>
       <Separator />

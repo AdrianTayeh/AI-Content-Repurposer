@@ -1,0 +1,102 @@
+import { redirect } from "next/navigation";
+import { signIn, providerMap } from "auth";
+import { AuthError } from "next-auth";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+const SIGNIN_ERROR_URL = "/error";
+
+export default async function SignInPage(props: {
+  searchParams: { callbackUrl?: string };
+}) {
+  const callbackUrl = (await props.searchParams?.callbackUrl) ?? "";
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-muted">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-center text-2xl font-bold">
+            Sign in to ContentAI
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-6">
+          {/* Credentials Form */}
+          <form
+            className="flex flex-col gap-4"
+            action={async (formData) => {
+              "use server";
+              try {
+                await signIn("credentials", formData);
+              } catch (error) {
+                if (error instanceof AuthError) {
+                  return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`);
+                }
+                throw error;
+              }
+            }}
+          >
+            <div className="flex flex-col gap-2">
+              <label htmlFor="email" className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                name="email"
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="password" className="text-sm font-medium">
+                Password
+              </label>
+              <Input
+                name="password"
+                id="password"
+                type="password"
+                placeholder="Password"
+                required
+              />
+            </div>
+            <input type="hidden" name="callbackUrl" value={callbackUrl} />
+            <Button type="submit" className="w-full mt-2">
+              Sign In
+            </Button>
+          </form>
+          {/* Provider Buttons */}
+          <div className="flex flex-col gap-2">
+            {Object.values(providerMap).map(
+              (provider: { id: string; name: string }) => (
+                <form
+                  key={provider.id}
+                  action={async (formData) => {
+                    "use server";
+                    try {
+                      await signIn(provider.id, {
+                        redirectTo: formData.get("callbackUrl") as string,
+                      });
+                    } catch (error) {
+                      if (error instanceof AuthError) {
+                        return redirect(
+                          `${SIGNIN_ERROR_URL}?error=${error.type}`
+                        );
+                      }
+                      throw error;
+                    }
+                  }}
+                >
+                  <input type="hidden" name="callbackUrl" value={callbackUrl} />
+                  <Button type="submit" variant="outline" className="w-full">
+                    Sign in with {provider.name}
+                  </Button>
+                </form>
+              )
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
