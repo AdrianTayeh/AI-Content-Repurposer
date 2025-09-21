@@ -14,14 +14,16 @@ datasource db {
 }
 
 model User {
-  id           String      @id @default(cuid())
-  email        String      @unique
+  id           String       @id @default(cuid())
+  email        String       @unique
   name         String?
   image        String?
   passwordHash String?
+  provider     String
+  providerId   String
   sessions     Session[]
   generations  Generation[]
-  createdAt    DateTime    @default(now())
+  createdAt    DateTime     @default(now())
 }
 
 model Session {
@@ -33,13 +35,12 @@ model Session {
 }
 
 model Generation {
-  id           String   @id @default(cuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id])
-  inputText    String
-  outputText   String
-  status       String   @default("completed")
-  modelUsed    String
-  createdAt    DateTime @default(now())
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  inputText  String
+  outputText String
+  status     String   @default("completed")
+  modelUsed  String
+  createdAt  DateTime @default(now())
 }
-

@@ -18,6 +18,8 @@ async function main() {
       email: 'testuser@example.com',
       name: 'Test User',
       image: 'https://i.pravatar.cc/150?img=1',
+      provider: 'credientials',
+      providerId: 'testuser@exmample.com',
       passwordHash,
     },
   });

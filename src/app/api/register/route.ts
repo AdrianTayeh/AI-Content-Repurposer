@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
@@ -17,6 +18,8 @@ export async function POST(req: NextRequest) {
       name,
       email,
       passwordHash,
+      provider: "credentials",
+      providerId: uuidv4(),
     },
   });
 
