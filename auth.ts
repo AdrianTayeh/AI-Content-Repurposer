@@ -3,16 +3,26 @@ import GitHub from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import type { Provider } from "next-auth/providers";
+import bcrypt from "bcryptjs";
+import { prisma } from "./src/lib/prisma";
 
 const providers: Provider[] = [
   Credentials({
     credentials: { password: { label: "Password", type: "password" } },
-    authorize(c) {
-      if (c.password !== "password") return null;
+    async authorize(credentials) {
+      const { email, password } = credentials as {
+        email: string;
+        password: string;
+      };
+      if (!email || !password) return null;
+      const user = await prisma.user.findUnique({ where: { email } });
+      if (!user || !user.passwordHash) return null;
+      const isValid = await bcrypt.compare(password, user.passwordHash);
+      if (!isValid) return null;
       return {
-        id: "test",
-        name: "Test User",
-        email: "test@example.com",
+        id: user.id,
+        name: user.name,
+        email: user.email,
       };
     },
   }),
