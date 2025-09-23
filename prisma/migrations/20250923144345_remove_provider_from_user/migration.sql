@@ -1,6 +1,3 @@
--- CreateSchema
-CREATE SCHEMA IF NOT EXISTS "public";
-
 -- CreateTable
 CREATE TABLE "public"."User" (
     "id" TEXT NOT NULL,
@@ -8,8 +5,6 @@ CREATE TABLE "public"."User" (
     "name" TEXT,
     "image" TEXT,
     "passwordHash" TEXT,
-    "provider" TEXT NOT NULL,
-    "providerId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -85,4 +80,3 @@ ALTER TABLE "public"."Generation" ADD CONSTRAINT "Generation_userId_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "public"."Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-

@@ -13,8 +13,6 @@ model User {
   name         String?
   image        String?
   passwordHash String?
-  provider     String
-  providerId   String
   createdAt    DateTime     @default(now())
   generations  Generation[]
   sessions     Session[]
