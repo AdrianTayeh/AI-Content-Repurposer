@@ -31,6 +31,8 @@ export async function POST(req: Request) {
     }
     try {
       const json = JSON.parse(jsonString);
+      // Debug: log the session object
+      console.log('Session object:', session);
       // Save to database only if user is authenticated
       if (session?.user?.id) {
         try {
