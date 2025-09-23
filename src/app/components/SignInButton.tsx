@@ -12,8 +12,9 @@ export default function SignInButton() {
 
   if (status === "loading") return null;
   if (session?.user) {
-    const name = session.user.name || session.user.email || "User";
-    const initials = name
+    const fullName = session.user.name || "User";
+    const firstName = fullName.split(" ")[0];
+    const initials = fullName
       .split(" ")
       .map((n) => n[0])
       .join("")
@@ -22,10 +23,10 @@ export default function SignInButton() {
     return (
       <div className="flex items-center gap-2 px-2">
         <Avatar>
-          <AvatarImage src={session.user.image || undefined} alt={name} />
+          <AvatarImage src={session.user.image || undefined} alt={firstName} />
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
-        <span>Hi, {name}!</span>
+        <span>Hi, {firstName}!</span>
         <Button variant="default" onClick={() => signOut()}>
           Sign out
         </Button>
