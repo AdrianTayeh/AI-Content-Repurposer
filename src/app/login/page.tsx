@@ -30,7 +30,8 @@ export default async function SignInPage(props: {
               try {
                 const email = formData.get("email");
                 const password = formData.get("password");
-                await signIn("credentials", { email, password, callbackUrl });
+                const callbackUrlValue = formData.get("callbackUrl") || callbackUrl;
+                await signIn("credentials", { email, password, callbackUrl: callbackUrlValue });
               } catch (error) {
                 if (error instanceof AuthError) {
                   return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`);
