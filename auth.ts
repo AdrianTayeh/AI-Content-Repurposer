@@ -5,6 +5,7 @@ import Google from "next-auth/providers/google";
 import type { Provider } from "next-auth/providers";
 import bcrypt from "bcryptjs";
 import { prisma } from "./src/lib/prisma";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 
 const providers: Provider[] = [
   Credentials({
@@ -48,6 +49,7 @@ export const providerMap = providers
   .filter((provider) => provider.id !== "credentials");
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: PrismaAdapter(prisma),
   providers,
   pages: {
     signIn: "/login",
