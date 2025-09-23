@@ -2,7 +2,7 @@ import { Upload, Mail, Hash, MessageSquare, Share2 } from "lucide-react";
 
 export default function HeroSection() {
   return (
-    <section className="px-4 flex justify-center items-center min-h-[calc(100vh-5rem)] pb-48">
+    <section className="px-4 flex justify-center items-center min-h-[calc(100vh-5rem)] pb-24">
       <div className="container max-w-4xl text-center">
         <h1 className="text-4xl md:text-6xl font-medium tracking-tight mb-6">
           Turn One Piece of Content Into{" "}

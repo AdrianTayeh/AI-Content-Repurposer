@@ -44,3 +44,4 @@ model Generation {
   modelUsed  String
   createdAt  DateTime @default(now())
 }
+ 
