@@ -40,8 +40,6 @@ model Generation {
   user       User     @relation(fields: [userId], references: [id])
   inputText  String
   outputText String
-  status     String   @default("completed")
-  modelUsed  String
   createdAt  DateTime @default(now())
 }
  

@@ -28,8 +28,6 @@ CREATE TABLE "public"."Generation" (
     "userId" TEXT NOT NULL,
     "inputText" TEXT NOT NULL,
     "outputText" TEXT NOT NULL,
-    "status" TEXT NOT NULL DEFAULT 'completed',
-    "modelUsed" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Generation_pkey" PRIMARY KEY ("id")
