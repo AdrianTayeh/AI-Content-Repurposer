@@ -1,5 +1,6 @@
 "use client";
-import { signIn, providerMap } from "auth";
+import { signIn } from "next-auth/react";
+import { providerMap } from "auth";
 import { useState, useTransition, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -80,11 +81,7 @@ function SignInForm() {
               <div className="text-red-500 text-sm text-center">{error}</div>
             )}
             {/* Only one callbackUrl input is needed */}
-            <Button
-              type="submit"
-              className="w-full mt-2"
-              disabled={isPending}
-            >
+            <Button type="submit" className="w-full mt-2" disabled={isPending}>
               {isPending ? "Signing In..." : "Sign In"}
             </Button>
           </form>
@@ -101,11 +98,7 @@ function SignInForm() {
                     });
                   }}
                 >
-                  <input
-                    type="hidden"
-                    name="callbackUrl"
-                    value={callbackUrl}
-                  />
+                  <input type="hidden" name="callbackUrl" value={callbackUrl} />
                   <Button type="submit" variant="outline" className="w-full">
                     Sign in with {provider.name}
                   </Button>
