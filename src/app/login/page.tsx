@@ -1,4 +1,4 @@
-
+"use client";
 import { signIn, providerMap } from "auth";
 import { useState, useTransition, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
