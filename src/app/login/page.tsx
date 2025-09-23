@@ -28,10 +28,19 @@ export default async function SignInPage(props: {
             action={async (formData) => {
               "use server";
               try {
-                const email = formData.get("email");
-                const password = formData.get("password");
-                const callbackUrlValue = formData.get("callbackUrl") || callbackUrl;
-                await signIn("credentials", { email, password, callbackUrl: callbackUrlValue });
+                const email = formData.get("email") as string;
+                const password = formData.get("password") as string;
+                const callbackUrlValue =
+                  (formData.get("callbackUrl") as string) || callbackUrl;
+                const result = await signIn("credentials", {
+                  email,
+                  password,
+                  callbackUrl: callbackUrlValue,
+                  redirect: false,
+                });
+                if (result?.ok) {
+                  return redirect(callbackUrlValue);
+                }
               } catch (error) {
                 if (error instanceof AuthError) {
                   return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`);
