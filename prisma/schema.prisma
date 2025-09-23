@@ -15,18 +15,18 @@ model User {
   passwordHash  String?
   emailVerified DateTime?
   createdAt     DateTime     @default(now())
+  accounts      Account[]
   generations   Generation[]
   sessions      Session[]
-  accounts      Account[]
 }
 
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
-  user         User     @relation(fields: [userId], references: [id])
   createdAt    DateTime @default(now())
   expires      DateTime
+  user         User     @relation(fields: [userId], references: [id])
 }
 
 model Generation {
