@@ -1,17 +1,20 @@
-import { redirect } from "next/navigation";
+
+"use client";
 import { signIn, providerMap } from "auth";
-import { AuthError } from "next-auth";
+import { useState, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 
-const SIGNIN_ERROR_URL = "/error";
 
-export default async function SignInPage(props: {
-  searchParams: { callbackUrl?: string };
-}) {
-  const callbackUrl = props.searchParams?.callbackUrl || "/dashboard";
+export default function SignInPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const [error, setError] = useState("");
+  const [isPending, startTransition] = useTransition();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted">
@@ -25,13 +28,14 @@ export default async function SignInPage(props: {
           {/* Credentials Form */}
           <form
             className="flex flex-col gap-4"
-            action={async (formData) => {
-              "use server";
-              try {
-                const email = formData.get("email") as string;
-                const password = formData.get("password") as string;
-                const callbackUrlValue =
-                  (formData.get("callbackUrl") as string) || callbackUrl;
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setError("");
+              const formData = new FormData(e.currentTarget);
+              const email = formData.get("email") as string;
+              const password = formData.get("password") as string;
+              const callbackUrlValue = (formData.get("callbackUrl") as string) || callbackUrl;
+              startTransition(async () => {
                 const result = await signIn("credentials", {
                   email,
                   password,
@@ -39,14 +43,13 @@ export default async function SignInPage(props: {
                   redirect: false,
                 });
                 if (result?.ok) {
-                  return redirect(callbackUrlValue);
+                  router.replace(callbackUrlValue);
+                } else if (result?.error) {
+                  setError("Invalid email or password");
+                } else {
+                  setError("Login failed. Please try again.");
                 }
-              } catch (error) {
-                if (error instanceof AuthError) {
-                  return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`);
-                }
-                throw error;
-              }
+              });
             }}
           >
             <input type="hidden" name="callbackUrl" value={callbackUrl} />
@@ -74,9 +77,12 @@ export default async function SignInPage(props: {
                 required
               />
             </div>
+            {error && (
+              <div className="text-red-500 text-sm text-center">{error}</div>
+            )}
             {/* Only one callbackUrl input is needed */}
-            <Button type="submit" className="w-full mt-2">
-              Sign In
+            <Button type="submit" className="w-full mt-2" disabled={isPending}>
+              {isPending ? "Signing In..." : "Sign In"}
             </Button>
           </form>
           {/* Provider Buttons */}
@@ -85,20 +91,12 @@ export default async function SignInPage(props: {
               (provider: { id: string; name: string }) => (
                 <form
                   key={provider.id}
-                  action={async (formData) => {
-                    "use server";
-                    try {
-                      await signIn(provider.id, {
-                        redirectTo: formData.get("callbackUrl") as string,
-                      });
-                    } catch (error) {
-                      if (error instanceof AuthError) {
-                        return redirect(
-                          `${SIGNIN_ERROR_URL}?error=${error.type}`
-                        );
-                      }
-                      throw error;
-                    }
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.currentTarget);
+                    await signIn(provider.id, {
+                      callbackUrl,
+                    });
                   }}
                 >
                   <input type="hidden" name="callbackUrl" value={callbackUrl} />
