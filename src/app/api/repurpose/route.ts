@@ -33,13 +33,18 @@ export async function POST(req: Request) {
       const json = JSON.parse(jsonString);
       // Save to database only if user is authenticated
       if (session?.user?.id) {
-        await prisma.generation.create({
-          data: {
-            userId: session.user.id,
-            inputText: userInput,
-            outputText: JSON.stringify(json),
-          },
-        });
+        try {
+          const result = await prisma.generation.create({
+            data: {
+              userId: session.user.id,
+              inputText: userInput,
+              outputText: JSON.stringify(json),
+            },
+          });
+          console.log('Generation saved:', result);
+        } catch (error) {
+          console.error('Error saving generation:', error);
+        }
       }
       return NextResponse.json(json);
     } catch {
