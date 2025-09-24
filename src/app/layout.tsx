@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import { SessionProvider } from "next-auth/react";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
         <SessionProvider>
           <Navbar />
           {children}
+          <Toaster />
         </SessionProvider>
       </body>
     </html>
