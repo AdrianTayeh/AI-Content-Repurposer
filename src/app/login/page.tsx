@@ -43,7 +43,7 @@ function SignInForm() {
                   redirect: false,
                 });
                 if (result?.ok) {
-                  router.replace(callbackUrlValue);
+                  window.location.href = callbackUrlValue;
                 } else if (result?.error) {
                   setError("Invalid email or password");
                 } else {
