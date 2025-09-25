@@ -1,4 +1,7 @@
+
 import { Upload, Mail, Hash, MessageSquare, Share2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function HeroSection() {
   return (
@@ -40,6 +43,11 @@ export default function HeroSection() {
             <Hash className="h-8 w-8 text-orange-600 mb-2" />
             <span className="text-sm text-muted-foreground">Hashtags</span>
           </div>
+        </div>
+        <div className="mt-24 flex justify-center">
+          <Button asChild size="lg" className="px-8">
+            <Link href="/login">Log in to save your generations</Link>
+          </Button>
         </div>
       </div>
     </section>
