@@ -11,29 +11,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogClose,
-} from "@/components/ui/dialog";
+// Removed dialog imports
 import { Copy, Hash } from "lucide-react";
 import { toast } from "sonner";
 
 interface GenerationDetailsProps {
-  generation: Generation | null;
-  open: boolean;
-  onClose: () => void;
+  generation: Generation;
+  onBack: () => void;
 }
 
-export function GenerationDetails({
-  generation,
-  open,
-  onClose,
-}: GenerationDetailsProps) {
-  if (!generation) return null;
+export function GenerationDetails({ generation, onBack }: GenerationDetailsProps) {
   const { outputs } = generation;
 
   const handleCopy = (content: string, type: string) => {
@@ -129,115 +116,107 @@ export function GenerationDetails({
   );
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl overflow-y-auto max-h-[90vh]">
-        <DialogHeader>
-          <DialogTitle>Generation Details</DialogTitle>
-          <DialogDescription>
-            Created: {formatDate(generation.createdAt)}
-          </DialogDescription>
-        </DialogHeader>
-        <div className="mb-4">
-          <h3 className="font-semibold mb-2">Original Content</h3>
-          <p className="text-muted-foreground whitespace-pre-line">
-            {generation.originalContent}
-          </p>
-        </div>
-        <Tabs defaultValue="summary" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="summary">Summary</TabsTrigger>
-            <TabsTrigger value="social">Social Media</TabsTrigger>
-            <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
-            <TabsTrigger value="metadata">Metadata</TabsTrigger>
-          </TabsList>
+    <div className="container mx-auto py-8 space-y-8">
+      <div className="flex items-center gap-4 mb-4">
+        <Button variant="ghost" size="sm" onClick={onBack} className="gap-2">
+          ← Back to Dashboard
+        </Button>
+        <span className="text-muted-foreground ml-2">Created: {formatDate(generation.createdAt)}</span>
+      </div>
+      <div className="mb-4">
+        <h3 className="font-semibold mb-2">Original Content</h3>
+        <p className="text-muted-foreground whitespace-pre-line">
+          {generation.originalContent}
+        </p>
+      </div>
+      <Tabs defaultValue="summary" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="summary">Summary</TabsTrigger>
+          <TabsTrigger value="social">Social Media</TabsTrigger>
+          <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
+          <TabsTrigger value="metadata">Metadata</TabsTrigger>
+        </TabsList>
 
-          <TabsContent value="summary" className="space-y-6">
-            {renderContentSection(
-              "Key Points Summary",
-              outputs.summary,
-              "Condensed version highlighting the main points"
-            )}
-          </TabsContent>
+        <TabsContent value="summary" className="space-y-6">
+          {renderContentSection(
+            "Key Points Summary",
+            outputs.summary,
+            "Condensed version highlighting the main points"
+          )}
+        </TabsContent>
 
-          <TabsContent value="social" className="space-y-6">
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Twitter Thread</h3>
-                {renderTweetThread(outputs.tweetThread)}
-              </div>
-              <Separator />
-              {renderContentSection(
-                "LinkedIn Post",
-                outputs.linkedinPost,
-                "Professional post optimized for LinkedIn engagement"
-              )}
+        <TabsContent value="social" className="space-y-6">
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Twitter Thread</h3>
+              {renderTweetThread(outputs.tweetThread)}
             </div>
-          </TabsContent>
-
-          <TabsContent value="newsletter" className="space-y-6">
+            <Separator />
             {renderContentSection(
-              "Newsletter Draft",
-              [
-                outputs.newsletter.title,
-                outputs.newsletter.intro,
-                outputs.newsletter.body,
-                outputs.newsletter.cta,
-              ]
-                .filter(Boolean)
-                .join("\n\n"),
-              "Email newsletter content ready for your subscribers"
+              "LinkedIn Post",
+              outputs.linkedinPost,
+              "Professional post optimized for LinkedIn engagement"
             )}
-          </TabsContent>
+          </div>
+        </TabsContent>
 
-          <TabsContent value="metadata" className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Hash className="h-5 w-5" />
-                    Hashtags
-                  </CardTitle>
-                  <CardDescription>
-                    Suggested hashtags for social media reach
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {outputs.hashtags.map((tag, i) => (
-                      <Badge
-                        key={i}
-                        variant="secondary"
-                        className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
-                        onClick={() => handleCopy(tag, "Hashtag")}
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-4 w-full"
-                    onClick={() =>
-                      handleCopy(outputs.hashtags.join(" "), "All Hashtags")
-                    }
-                  >
-                    <Copy className="h-4 w-4 mr-2" />
-                    Copy All Hashtags
-                  </Button>
-                </CardContent>
-              </Card>
+        <TabsContent value="newsletter" className="space-y-6">
+          {renderContentSection(
+            "Newsletter Draft",
+            [
+              outputs.newsletter.title,
+              outputs.newsletter.intro,
+              outputs.newsletter.body,
+              outputs.newsletter.cta,
+            ]
+              .filter(Boolean)
+              .join("\n\n"),
+            "Email newsletter content ready for your subscribers"
+          )}
+        </TabsContent>
 
-              {/* Add more metadata sections here if needed */}
-            </div>
-          </TabsContent>
-        </Tabs>
-        <DialogClose asChild>
-          <Button variant="outline" className="mt-4 w-full">
-            Close
-          </Button>
-        </DialogClose>
-      </DialogContent>
-    </Dialog>
+        <TabsContent value="metadata" className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Hash className="h-5 w-5" />
+                  Hashtags
+                </CardTitle>
+                <CardDescription>
+                  Suggested hashtags for social media reach
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {outputs.hashtags.map((tag, i) => (
+                    <Badge
+                      key={i}
+                      variant="secondary"
+                      className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                      onClick={() => handleCopy(tag, "Hashtag")}
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-4 w-full"
+                  onClick={() =>
+                    handleCopy(outputs.hashtags.join(" "), "All Hashtags")
+                  }
+                >
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy All Hashtags
+                </Button>
+              </CardContent>
+            </Card>
+            {/* Add more metadata sections here if needed */}
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }
