@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     try {
       const json = JSON.parse(jsonString);
       // Debug: log the session object
-      console.log('Session object:', session);
+      console.log("Session object:", session);
       // Save to database only if user is authenticated
       if (session?.user?.id) {
         try {
@@ -43,9 +43,9 @@ export async function POST(req: Request) {
               outputText: JSON.stringify(json),
             },
           });
-          console.log('Generation saved:', result);
+          console.log("Generation saved:", result);
         } catch (error) {
-          console.error('Error saving generation:', error);
+          console.error("Error saving generation:", error);
         }
       }
       return NextResponse.json(json);
@@ -56,6 +56,45 @@ export async function POST(req: Request) {
         { status: 502 }
       );
     }
+  } catch (err) {
+    return NextResponse.json(
+      { error: (err as Error).message },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET() {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const generations = await prisma.generation.findMany({
+      where: { userId: session.user.id },
+      orderBy: { createdAt: "desc" },
+    });
+    const result = generations.map((gen) => {
+      let parsed;
+      try {
+        parsed = JSON.parse(gen.outputText);
+      } catch {
+        parsed = {};
+      }
+      return {
+        id: gen.id,
+        originalContent: gen.inputText,
+        createdAt: gen.createdAt,
+        outputs: {
+          summary: parsed.summary || [],
+          tweetThread: parsed.tweetThread || [],
+          linkedinPost: parsed.linkedInPost || parsed.linkedinPost || "",
+          newsletter: parsed.newsletter || {},
+          hashtags: parsed.hashtags || [],
+        },
+      };
+    });
+    return NextResponse.json(result);
   } catch (err) {
     return NextResponse.json(
       { error: (err as Error).message },
