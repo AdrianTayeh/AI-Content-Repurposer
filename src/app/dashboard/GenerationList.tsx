@@ -4,6 +4,7 @@ import { GenerationCard } from "./GenerationCard";
 import { Badge } from "@/components/ui/badge";
 import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface GenerationListProps {
   onOpen: (generation: Generation) => void;
@@ -38,7 +39,9 @@ export function GenerationList({ onOpen }: GenerationListProps) {
         <p className="text-muted-foreground mb-4">
           Start creating content to see your generations here
         </p>
-        <Button>Create Your First Generation</Button>
+        <Button asChild>
+          <Link href="/">Create Your First Generation</Link>
+        </Button>
       </div>
     );
   }
