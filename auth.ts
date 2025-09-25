@@ -67,8 +67,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     async session({ session, token }) {
       console.log("SESSION CALLBACK", { session, token });
-      if (session.user && token?.sub) {
-        session.user.id = token.sub;
+      if (session.user && token?.id) {
+        (session.user as { id?: string; email?: string }).id = String(token.id);
+        (session.user as { id?: string; email?: string }).email =
+          token.email as string;
       }
       return session;
     },
