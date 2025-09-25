@@ -18,16 +18,15 @@ const providers: Provider[] = [
         email: string;
         password: string;
       };
+      console.log("AUTH: credentials", { email, password });
       if (!email || !password) return null;
       const user = await prisma.user.findUnique({ where: { email } });
+      console.log("AUTH: user", user);
       if (!user || !user.passwordHash) return null;
       const isValid = await bcrypt.compare(password, user.passwordHash);
+      console.log("AUTH: isValid", isValid);
       if (!isValid) return null;
-      return {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      };
+      return { id: user.id, name: user.name, email: user.email };
     },
   }),
   GitHub({
