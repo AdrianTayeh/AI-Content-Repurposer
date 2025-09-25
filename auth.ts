@@ -9,7 +9,10 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 
 const providers: Provider[] = [
   Credentials({
-    credentials: { password: { label: "Password", type: "password" } },
+    credentials: {
+      email: { label: "Email", type: "email" },
+      password: { label: "Password", type: "password" },
+    },
     async authorize(credentials) {
       const { email, password } = credentials as {
         email: string;
