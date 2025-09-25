@@ -40,15 +40,14 @@ function SignInForm() {
                   email,
                   password,
                   callbackUrl: callbackUrlValue,
-                  redirect: false,
                 });
-                if (result?.ok) {
-                  window.location.href = callbackUrlValue;
-                } else if (result?.error) {
-                  setError("Invalid email or password");
-                } else {
-                  setError("Login failed. Please try again.");
-                }
+                // if (result?.ok) {
+                //   window.location.href = callbackUrlValue;
+                // } else if (result?.error) {
+                //   setError("Invalid email or password");
+                // } else {
+                //   setError("Login failed. Please try again.");
+                // }
               });
             }}
           >
