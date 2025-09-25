@@ -57,6 +57,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async session({ session, token }) {
+      console.log("SESSION CALLBACK", { session, token });
       if (session.user && token?.sub) {
         session.user.id = token.sub;
       }
