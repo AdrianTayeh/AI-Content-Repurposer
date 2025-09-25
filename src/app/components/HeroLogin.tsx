@@ -11,7 +11,7 @@ export function HeroLogin() {
   return (
     <div className="mt-24 flex justify-center">
       <Button asChild size="lg" className="px-8">
-        <Link href="/login">Log in to save your generations</Link>
+        <Link href="/login">Sign in to save your generations</Link>
       </Button>
     </div>
   );
