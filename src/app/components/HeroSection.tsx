@@ -1,10 +1,7 @@
 import { Upload, Mail, Hash, MessageSquare, Share2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { HeroLogin } from "./HeroLogin";
 
 export default function HeroSection() {
-  const { data: session } = useSession();
   return (
     <section className="px-4 flex justify-center items-center min-h-[calc(100vh-5rem)] pb-24">
       <div className="container max-w-4xl text-center">
@@ -45,13 +42,7 @@ export default function HeroSection() {
             <span className="text-sm text-muted-foreground">Hashtags</span>
           </div>
         </div>
-        {!session && (
-          <div className="mt-24 flex justify-center">
-            <Button asChild size="lg" className="px-8">
-              <Link href="/login">Log in to save your generations</Link>
-            </Button>
-          </div>
-        )}
+        <HeroLogin />
       </div>
     </section>
   );
